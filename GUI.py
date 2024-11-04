@@ -1,48 +1,27 @@
-from PyQt5.QtWidgets import QApplication, QMainWindow, QLabel, QTextEdit, QPushButton, QMessageBox, QVBoxLayout, QWidget
-
+import streamlit as st
 import pickle
 
-class EmotionDetectionApp(QMainWindow):
-    def __init__(self):
-        super().__init__()
-        self.setWindowTitle("Érzelemfelismerő")
-        self.setGeometry(100, 100, 400, 300)
+# Modell betolt
+def load_model():
+    with open('sentiment_model.pkl', 'rb') as f:
+        return pickle.load(f)
+
+model = load_model()
+
+# Streamlit
+st.title("Érzelemfelismerő")
+st.write("Írd be a szöveget az érzelem osztályozásához!")
 
 
-        self.label = QLabel("Írd be a szöveget:")
-        self.text_edit = QTextEdit()
-        self.classify_button = QPushButton("Osztályozás")
-        self.classify_button.clicked.connect(self.classify_text)
+user_input = st.text_area("Írd be a szöveget:")
 
 
-        layout = QVBoxLayout()
-        layout.addWidget(self.label)
-        layout.addWidget(self.text_edit)
-        layout.addWidget(self.classify_button)
+if st.button("Osztályozás"):
+    if user_input.strip() == "":
+        st.warning("Kérlek, adj meg egy szöveget.")
+    else:
+        sentiment = model.predict([user_input])[0]
+        st.success(f"Az érzelem: {sentiment}")
 
 
-        container = QWidget()
-        container.setLayout(layout)
-        self.setCentralWidget(container)
-        self.model=self.load_model()
-
-
-
-
-    def load_model(self):
-        with open('sentiment_model.pkl', 'rb') as f:
-            return pickle.load(f)
-
-
-    def classify_text(self):
-        user_input = self.text_edit.toPlainText().strip()
-        if not user_input:
-            QMessageBox.warning(self, "Hiba", "Kérlek, adj meg egy szöveget.")
-            return
-
-
-        sentiment = self.model.predict([user_input])[0]
-        QMessageBox.information(self, "Eredmény", f"Az érzelem: {sentiment}")
-
-
-
+#futtatashoz ALT+f12 es streamlit run GUI.py
