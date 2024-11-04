@@ -24,11 +24,14 @@ class EmotionDetectionApp(QMainWindow):
         container = QWidget()
         container.setLayout(layout)
         self.setCentralWidget(container)
+        self.model=self.load_model()
 
 
 
 
-    #model megnyitasa def load_model(self):
+    def load_model(self):
+        with open('model/sentiment_model.pkl', 'rb') as f:
+            return pickle.load(f)
 
 
     def classify_text(self):
