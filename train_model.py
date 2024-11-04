@@ -16,3 +16,15 @@ X_train, X_test, y_train, y_test = train_test_split(texts, labels, test_size=0.2
 
 # Pipeline letrehozasa
 model = make_pipeline(TfidfVectorizer(), MultinomialNB())
+# Modell tanitasa
+model.fit(X_train, y_train)
+
+# Modell ertekelese a teszten
+test_score = model.score(X_test, y_test)
+print(f'Teszt pontszám: {test_score:.3f}')
+
+# Modell mentese
+with open('sentiment_model.pkl', 'wb') as f:
+    pickle.dump(model, f)
+
+print("A modell sikeresen mentve!")
