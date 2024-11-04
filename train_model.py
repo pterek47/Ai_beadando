@@ -8,7 +8,7 @@ import pickle # modell mentese
 
 data = pd.read_csv('tweet_emotions.csv') # kaggle-rol van a dataset
 
-# adatok feldolgozasa, szetvalasztasa
+# adatok feldolgozasa,szetvalasztasa
 texts = data['content'].fillna('')
 labels = data['sentiment']
 # adatok felosztasa tanulasra es tesztelesre
