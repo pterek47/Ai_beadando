@@ -30,7 +30,7 @@ class EmotionDetectionApp(QMainWindow):
 
 
     def load_model(self):
-        with open('model/sentiment_model.pkl', 'rb') as f:
+        with open('sentiment_model.pkl', 'rb') as f:
             return pickle.load(f)
 
 
