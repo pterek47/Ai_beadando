@@ -1,30 +1,47 @@
-import pandas as pd 
+import pandas as pd
+from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.model_selection import train_test_split
+from sklearn.naive_bayes import MultinomialNB
+from sklearn.pipeline import make_pipeline
+from sklearn.metrics import confusion_matrix, ConfusionMatrixDisplay, classification_report
+import pickle
+import os
 
-from sklearn.feature_extraction.text import TfidfVectorizer # tfidf -> term frequency inverse document frequency, szavak fontossagat meri
-from sklearn.model_selection import train_test_split # a dataset-et szetbontja train es test reszre
-from sklearn.naive_bayes import MultinomialNB # Naive Bayes modell
-from sklearn.pipeline import make_pipeline # pipeline, ami osszefuzi a tfidf-et es a modellt
-import pickle # modell mentese 
+def create_test_data():
+    data = pd.read_csv('tweet_emotions.csv')
+    texts = data['content'].fillna('')
+    labels = data['sentiment']
+    X_train, X_test, y_train, y_test = train_test_split(texts, labels, test_size=0.2, random_state=42)
 
-data = pd.read_csv('tweet_emotions.csv') # kaggle-rol van a dataset
+    with open('test_data.pkl', 'wb') as f:
+        pickle.dump((X_test, y_test), f)
 
-# adatok feldolgozasa,szetvalasztasa
-texts = data['content'].fillna('')
-labels = data['sentiment']
-# adatok felosztasa tanulasra es tesztelesre
-X_train, X_test, y_train, y_test = train_test_split(texts, labels, test_size=0.2, random_state=42)
+    return X_test, y_test
 
-# Pipeline letrehozasa
-model = make_pipeline(TfidfVectorizer(lowercase=True, stop_words='english', ngram_range=(1,2), max_features=5000), MultinomialNB())
-# Modell tanitasa
-model.fit(X_train, y_train)
+def train_model():
+    data = pd.read_csv('tweet_emotions.csv')
+    texts = data['content'].fillna('')
+    labels = data['sentiment']
+    X_train, X_test, y_train, y_test = train_test_split(texts, labels, test_size=0.2, random_state=42)
 
-# Modell ertekelese a teszten
-test_score = model.score(X_test, y_test)
-print(f'Teszt pontszám: {test_score:.3f}')
+    model = make_pipeline(TfidfVectorizer(lowercase=True, stop_words='english', ngram_range=(1, 2), max_features=5000), MultinomialNB())
+    model.fit(X_train, y_train)
 
-# Modell mentese
-with open('sentiment_model.pkl', 'wb') as f:
-    pickle.dump(model, f)
+    y_pred = model.predict(X_test)
+    test_score = model.score(X_test, y_test)
+    print(f'Teszt pontszám: {test_score:.5f}')
 
-print("A modell sikeresen mentve!")
+    cm = confusion_matrix(y_test, y_pred, labels=model.classes_)
+    print("Konfúziós mátrix:", cm)
+
+    with open('sentiment_model.pkl', 'wb') as f:
+        pickle.dump(model, f)
+
+    print("A modell sikeresen mentve!")
+
+if __name__ == "__main__":
+    if not os.path.exists('test_data.pkl'):
+        print("A test_data.pkl fájl nem létezik, létrehozom...")
+        create_test_data()
+
+    train_model()
