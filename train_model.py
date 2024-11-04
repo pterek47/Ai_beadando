@@ -11,3 +11,8 @@ data = pd.read_csv('tweet_emotions.csv') # kaggle-rol van a dataset
 # adatok feldolgozasa, szetvalasztasa
 texts = data['content'].fillna('')
 labels = data['sentiment']
+# adatok felosztasa tanulasra es tesztelesre
+X_train, X_test, y_train, y_test = train_test_split(texts, labels, test_size=0.2, random_state=42)
+
+# Pipeline letrehozasa
+model = make_pipeline(TfidfVectorizer(), MultinomialNB())
