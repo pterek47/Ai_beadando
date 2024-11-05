@@ -1,0 +1,3 @@
+{
+    "multinomialnb_model": "A Multinomial Naive Bayes osztályozó egy valószínűségi alapú modell, amelyet főként szöveges adatok, például spam- vagy érzéselemzés céljára használnak. Az algoritmus a Bayes-tételre épül, és feltételezi, hogy a jellemzők (általában a szavak előfordulási gyakorisága) függetlenek az osztálycímkétől. Gyorsan tanul, kevesebb memóriaigénye van, és jól teljesít nagy dimenziójú adatokkal, például szövegekkel. Azonban az függetlenség feltételezése nem mindig valósul meg a gyakorlatban, ami néha alacsonyabb teljesítményt eredményezhet összetett adathalmazon. Használható például véleményelemzésre, spam szűrésre és dokumentumok osztályozására."
+}
