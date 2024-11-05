@@ -4,20 +4,33 @@ import pandas as pd
 import plotly.figure_factory as ff
 from sklearn.metrics import confusion_matrix, classification_report
 import plotly.graph_objects as go
+import glob 
+import os 
 
 
 def load_model():
-    with open('sentiment_model.pkl', 'rb') as f:
-        return pickle.load(f)
+    models = {}
+    
+    for model_file in glob.glob('*_model.pkl'):
+        with open(model_file, 'rb') as f:
+            model_name = os.path.splitext(model_file)[0]
+            models[model_name] = pickle.load(f)
+    return models
 
 def load_test_data():
     with open('test_data.pkl', 'rb') as f:
         return pickle.load(f)
 
-model = load_model()
+loaded_models = load_model()
 X_test, y_test = load_test_data()
 
 st.title("Érzelemfelismerő")
+
+st.title("Válassz modellt!")
+selected_model_name = st.selectbox("Válassz modellt", list(loaded_models.keys()))
+
+model = loaded_models[selected_model_name]
+
 st.write("Írd be a szöveget az érzelem osztályozásához!")
 
 

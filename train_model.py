@@ -34,7 +34,7 @@ def train_model():
     cm = confusion_matrix(y_test, y_pred, labels=model.classes_)
     print("Konfúziós mátrix:", cm)
 
-    with open('sentiment_model.pkl', 'wb') as f:
+    with open('MultionmialNB_model.pkl', 'wb') as f:
         pickle.dump(model, f)
 
     print("A modell sikeresen mentve!")
