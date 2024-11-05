@@ -45,11 +45,11 @@ if st.session_state.classified:
 
         if cm.size > 0:
 
-            try:
+            try: # konfuzios matrix, megmutatja, hogy melyik erzelem mivel lehet osszekeverve pl. worry&neutral. ha x: neutral y: worry = 532 az azt jelenti hogy 532 instance ami a neutral classhoz tartozna az lett rosszul osztalyozva es worry classhoz lett rendelve
                 fig = ff.create_annotated_heatmap(
                     z=cm,
-                    x=model.classes_,
-                    y=model.classes_,
+                    x=list(model.classes_),
+                    y=list(model.classes_),
                     colorscale='Blues',
                     showscale=True
                 )
