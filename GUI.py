@@ -33,8 +33,8 @@ st.title("Érzelemfelismerő")
 selected_model_name = st.selectbox("Válassz modellt", list(loaded_models.keys()))
 
 if selected_model_name.lower() in model_descriptions:
-    st.write("Információ a modellről:")
-    st.write(model_descriptions[selected_model_name.lower()])
+    with st.expander("Információ a modellről:", expanded=False):
+        st.write(model_descriptions[selected_model_name.lower()])
 
 
 model = loaded_models[selected_model_name]
