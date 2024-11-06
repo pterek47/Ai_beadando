@@ -47,19 +47,26 @@ if model:
 
     user_input = st.text_area("Írd be a szöveget az érzelem osztályozásához!")
 
+    use_multiline = st.checkbox("Többsoros szöveg", value=False)
+
     if st.button("Osztályozás"):
         if user_input.strip() == "":
             st.warning("Kérlek, adj meg egy szöveget.")
         else:
-            sentiment = model.predict([user_input])[0]
+            if use_multiline:
+                user_input = user_input.split('\n')
+                for line in user_input:
+                    if line.strip() != "":
+                        sentiment = model.predict([line])[0]
+                        st.success(f"Az érzelem: {sentiment}, ({line})")
+                        st.session_state.sentiment_log.append(sentiment)
+            else: 
+                sentiment = model.predict([user_input])[0]    
+                st.success(f"Az érzelem: {sentiment}")
+                st.session_state.classified = True
+                st.session_state.sentiment_log.append(sentiment)
             
-            
-            
-            st.success(f"Az érzelem: {sentiment}")
-
-            st.session_state.classified = True
-            st.session_state.sentiment_log.append(sentiment)
-            
+    #sidebar piechart, az eddig beirt szovegek erzelmeinek eloszlasa
     if len(st.session_state.sentiment_log) > 0:
         sentiment_counts = pd.Series(st.session_state.sentiment_log).value_counts()
         fig = go.Figure(data=[go.Pie(labels=sentiment_counts.index, values=sentiment_counts.values)])
