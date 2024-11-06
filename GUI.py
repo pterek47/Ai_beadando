@@ -6,6 +6,7 @@ from sklearn.metrics import confusion_matrix, classification_report
 import plotly.graph_objects as go
 import os, json
 
+
 #betolti az adott modelt, ha nem talalja tajekoztat
 def load_model(model_name):
     try:
@@ -38,6 +39,8 @@ model = load_model(selected_model_name)
 X_test, y_test = load_test_data()
 
 if model:
+    if 'sentiment_log' not in st.session_state:
+        st.session_state.sentiment_log = []
 
     if 'classified' not in st.session_state:
         st.session_state.classified = False
@@ -49,9 +52,21 @@ if model:
             st.warning("Kérlek, adj meg egy szöveget.")
         else:
             sentiment = model.predict([user_input])[0]
+            
+            
+            
             st.success(f"Az érzelem: {sentiment}")
 
             st.session_state.classified = True
+            st.session_state.sentiment_log.append(sentiment)
+            
+    if len(st.session_state.sentiment_log) > 0:
+        sentiment_counts = pd.Series(st.session_state.sentiment_log).value_counts()
+        fig = go.Figure(data=[go.Pie(labels=sentiment_counts.index, values=sentiment_counts.values)])
+        fig.update_layout(title='Az eddig beírt szövegek érzelmének eloszlása:')
+        st.sidebar.plotly_chart(fig, use_container_width=True)
+        
+        
 
 
     if st.session_state.classified:
