@@ -60,7 +60,7 @@ def train_svm():
     cm = confusion_matrix(y_test, y_pred, labels=model.classes_)
     print("Konfúziós mátrix:", cm)
 
-    with open('SVM_model.pkl', 'wb') as f:
+    with open('svm_model.pkl', 'wb') as f:
         pickle.dump(model, f)
     print("Az SVM modell sikeresen mentveasd!")
 if __name__ == "__main__":

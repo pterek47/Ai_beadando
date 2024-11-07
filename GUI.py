@@ -18,23 +18,25 @@ def load_model(model_name):
 def load_test_data():
     with open('test_data.pkl', 'rb') as f:
         return pickle.load(f)
+
 #model leirasokat betolti
 with open('model_descriptions.json', 'r', encoding="utf-8") as desc_file:
     model_descriptions = json.load(desc_file)
 
 st.title("Érzelemfelismerő")
 
-# ha true akkor a kiertekelesi nezet jon elo es elrejti a szoveg osztalyozas inputot
 
+# ha true akkor a kiertekelesi nezet jon elo es elrejti a szoveg osztalyozas inputot
 if 'evaluation_mode' not in st.session_state:
     st.session_state.evaluation_mode = False
-# ha az osztalyozas sikeres akkor igaz és megjeleníti a kiertekeles gombot
 
+# ha az osztalyozas sikeres akkor igaz és megjeleníti a kiertekeles gombot
 if 'classification_done' not in st.session_state:
     st.session_state.classification_done = False
 
 selected_model_name = st.selectbox("Válassz modellt", list(model_descriptions.keys()))
-# adott modelhez adott leirast megjeleniti
+
+
 if not st.session_state.evaluation_mode:
     if selected_model_name in model_descriptions:
         with st.expander("Információ a modellről:", expanded=False):
@@ -68,6 +70,7 @@ if not st.session_state.evaluation_mode:
                     st.session_state.sentiment_log.append(sentiment)
 
                 st.session_state.classification_done = True
+
         #sidebar piechart, az eddig beirt szovegek erzelmeinek eloszlasa
         if len(st.session_state.sentiment_log) > 0:
             sentiment_counts = pd.Series(st.session_state.sentiment_log).value_counts()
@@ -90,6 +93,7 @@ else:
         y_pred = model.predict(X_test)
         cm = confusion_matrix(y_test, y_pred, labels=model.classes_)
 
+
         if cm.size > 0:
             try: #konfuzios matrix, megmutatja, hogy melyik erzelem mivel lehet osszekeverve pl. worry&neutral. ha x: neutral y: worry = 532 az azt jelenti hogy 532 instance ami a neutral classhoz tartozna az lett rosszul osztalyozva es worry classhoz lett rendelve
                 fig = ff.create_annotated_heatmap(
@@ -103,6 +107,7 @@ else:
             except Exception as e:
                 st.error(f"Hiba történt a grafikon generálása során: {str(e)}")
 
+            # pontossagi riport
             report = classification_report(y_test, y_pred, output_dict=True, zero_division=1)
             report_df = pd.DataFrame(report).transpose()
 
