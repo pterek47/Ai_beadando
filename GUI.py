@@ -63,21 +63,23 @@ if not st.session_state.evaluation_mode:
                         if line.strip() != "":
                             sentiment = model.predict([line])[0]
                             st.success(f"Az érzelem: {sentiment}, ({line})")
-                            st.session_state.sentiment_log.append(sentiment)
+                            st.session_state.sentiment_log.append((line, sentiment))
                 else:
                     sentiment = model.predict([user_input])[0]
                     st.success(f"Az érzelem: {sentiment}")
-                    st.session_state.sentiment_log.append(sentiment)
+                    st.session_state.sentiment_log.append((user_input, sentiment))
 
                 st.session_state.classification_done = True
 
-        #sidebar piechart, az eddig beirt szovegek erzelmeinek eloszlasa
+        #sidebar piec hart, az eddig beirt szovegek erzelmeinek eloszlasa
         if len(st.session_state.sentiment_log) > 0:
-            sentiment_counts = pd.Series(st.session_state.sentiment_log).value_counts()
+            sentiment_counts = pd.Series([s[1] for s in st.session_state.sentiment_log]).value_counts()
             fig = go.Figure(data=[go.Pie(labels=sentiment_counts.index, values=sentiment_counts.values)])
-            fig.update_layout(title='Az eddig beírt szövegek érzelmének eloszlása:')
+            fig.update_layout(title='Érzelemeloszlás:', showlegend=True)
             st.sidebar.plotly_chart(fig, use_container_width=True)
-
+            st.sidebar.subheader("Szövegek története és osztályozásuk:")
+            for i, (input_text, sentiment) in enumerate(st.session_state.sentiment_log):
+                st.sidebar.write(f"{i+1}. Szöveg: '{input_text}' | Érzelem: {sentiment}")
         if st.session_state.classification_done:
             if st.button("Kiértékelés"):
                 st.session_state.evaluation_mode = True
