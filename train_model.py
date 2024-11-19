@@ -1,14 +1,15 @@
 import pandas as pd
+import pickle
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.model_selection import train_test_split
 from sklearn.naive_bayes import MultinomialNB
 from sklearn.pipeline import make_pipeline
 from sklearn.metrics import confusion_matrix, ConfusionMatrixDisplay, classification_report
-import pickle
 import os
-
 from sklearn.svm import SVC
-
+from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.cluster import KMeans
+import numpy as np
 
 def create_test_data():
     data = pd.read_csv('tweet_emotions.csv')
@@ -20,6 +21,29 @@ def create_test_data():
         pickle.dump((X_test, y_test), f)
 
     return X_test, y_test
+def train_kmeans():
+    # Read the data
+    data = pd.read_csv('tweet_emotions.csv')
+    texts = data['content'].fillna('')
+
+    # Vectorize the texts (convert them to numerical data)
+    vectorizer = TfidfVectorizer(lowercase=True, stop_words='english', ngram_range=(1, 3), max_features=5000)
+    X = vectorizer.fit_transform(texts)
+
+    # Train the KMeans model
+    num_clusters = 13
+    model = KMeans(n_clusters=num_clusters, random_state=42)
+    model.fit(X)
+
+    # Save the KMeans model and the vectorizer separately
+    with open('kmeans_model.pkl', 'wb') as f:
+        pickle.dump(model, f)
+
+    with open('vectorizer.pkl', 'wb') as f:
+        pickle.dump(vectorizer, f)
+
+    print("K-Means model saved successfully!")
+
 
 def train_multinomial_nb():
     data = pd.read_csv('tweet_emotions.csv')
@@ -67,6 +91,6 @@ if __name__ == "__main__":
     if not os.path.exists('test_data.pkl'):
         print("A test_data.pkl fájl nem létezik, létrehozom...")
         create_test_data()
-
     train_multinomial_nb()
     train_svm()
+    train_kmeans()
