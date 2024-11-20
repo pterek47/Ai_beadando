@@ -91,6 +91,27 @@ if __name__ == "__main__":
     if not os.path.exists('test_data.pkl'):
         print("A test_data.pkl fájl nem létezik, létrehozom...")
         create_test_data()
-    train_multinomial_nb()
-    train_svm()
-    train_kmeans()
+    #train_multinomial_nb()
+    #train_svm()
+    #train_kmeans()
+    #Tesztelésre alkalmas szöveg:
+#I absolutely love the smell of fresh flowers.
+# I feel so guilty for forgetting her birthday.
+# The movie was so disappointing; I expected better.
+# I’m thrilled to be going on vacation next week.
+# I feel a deep sense of nostalgia when I visit my childhood home.
+# The thought of losing my job fills me with anxiety.
+# I’m so proud of how much I’ve achieved this year.
+# I can’t believe I embarrassed myself in front of everyone.
+# The relief I felt when the test was over was immense.
+# I feel a lot of jealousy when I see my friends getting promotions.
+# Grief is overwhelming when you lose someone close.
+# I was ecstatic to hear about the surprise party they planned for me.
+# I regret not taking the opportunity when it was offered.
+# I feel indifferent about the new movie that just came out.
+# I love watching the sunset; it brings me peace.
+# I’ve been feeling so bored lately with nothing to do.
+# The surprise gift made me incredibly happy.
+# I can't stop laughing at the silly joke he made.
+# I hate the way she talks behind my back.
+# I was shocked when I heard the news about the accident.
