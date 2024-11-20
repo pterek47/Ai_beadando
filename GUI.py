@@ -82,6 +82,9 @@ if selected_model_name != "KMeans_model":
                 if st.button("Nem megelégedett a beosztással?"):
                     st.session_state.show_inputs = True
                 if st.session_state.show_inputs:
+                    st.write("Ez jelenleg a MultinomialNB modellt tanítja újra.")
+                    st.write("Kérjük ne 1-1 szót írjon.")
+                    st.write("Az AI nagyon sok külön üzenetet tanult már be. A legújabb információ neki ugyanannyi értékkel bír mint a legrégebbi,avagy ha megad egy érzelmet és egy szöveget közel biztos hogy nem fogja egyből megadni a várt érzelmet.")
                     st.session_state.sentimentfix_text = st.text_input(
                         "Add meg az érzelmet:",
                         value=st.session_state.sentimentfix_text,
