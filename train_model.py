@@ -35,15 +35,7 @@ def train_multinomial_nb():
     texts = data['content'].fillna('')
     labels = data['sentiment']
     X_train, X_test, y_train, y_test = train_test_split(texts, labels, test_size=0.2, random_state=42)
-    vectorizer = TfidfVectorizer(
-        lowercase=True,
-        stop_words=None,
-        ngram_range=(1, 2),    # unigrammok és bigrammok
-        max_features=None,     #  max_features kikapcsolva,hogy bármilyen ritka kifejezés működjön
-        min_df=1,              # Allow terms that appear in only 1 document
-        max_df=1.0
-    )
-    model = make_pipeline(vectorizer, MultinomialNB())
+    model = make_pipeline(TfidfVectorizer(lowercase=True, stop_words='english', ngram_range=(1, 2), max_features=5000), MultinomialNB())
     model.fit(X_train, y_train)
     y_pred = model.predict(X_test)
     test_score = model.score(X_test, y_test)
@@ -76,6 +68,28 @@ if __name__ == "__main__":
     train_multinomial_nb()
     #train_svm()
     #train_kmeans()
+    #tanítás tesztelése: hozzá kell adni egy szöveg érzelem párt és azt másolni párszor. akkor szépen felismeri, mivel találkozott vele elég alkalommal.
+    #pl:
+    #git commit hej eloszor neutral
+    #tweet_emotions.csv második sorába ezeket beillesztjük
+    #47,anger,git commit hej
+    #47,anger,git commit hej
+    #47,anger,git commit hej
+    #47,anger,git commit hej
+    #47,anger,git commit hej
+    #47,anger,git commit hej
+    #47,anger,git commit hej
+    #47,anger,git commit hej
+    #47,anger,git commit hej
+    #47,anger,git commit hej
+    #47,anger,git commit hej
+    #47,anger,git commit hej
+    #47,anger,git commit hej
+    #47,anger,git commit hej
+    #47,anger,git commit hej
+    #47,anger,git commit hej
+    #47,anger,git commit hej
+    #majd beillesztés után meg kell nyomni a fejlessze az ai unkat gombot. ez újra traineli a multinomialNB modelt.
     #Tesztelésre alkalmas szöveg:
 #I absolutely love the smell of fresh flowers.
 # I feel so guilty for forgetting her birthday.

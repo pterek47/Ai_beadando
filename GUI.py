@@ -5,7 +5,6 @@ import plotly.figure_factory as ff
 from sklearn.metrics import confusion_matrix, classification_report
 import plotly.graph_objects as go
 import os, json
-import subprocess
 from sklearn.decomposition import PCA
 
 #betolti az adott modelt, ha nem talalja tajekoztat
@@ -145,7 +144,6 @@ if selected_model_name != "KMeans_model":
                     st.plotly_chart(fig, use_container_width=True)
                 except Exception as e:
                     st.error(f"Hiba történt a grafikon generálása során: {str(e)}")
-
                 # pontossagi riport
                 report = classification_report(y_test, y_pred, output_dict=True, zero_division=1)
                 report_df = pd.DataFrame(report).transpose()
@@ -161,7 +159,6 @@ if selected_model_name != "KMeans_model":
                 st.plotly_chart(fig2, use_container_width=True)
             else:
                 st.error("A konfúziós mátrix nem generálódott megfelelően.")
-
         if st.button("Vissza"):
             st.session_state.evaluation_mode = False
             st.session_state.classification_done = False
@@ -171,17 +168,13 @@ else:
         if selected_model_name in model_descriptions:
             with st.expander("Információ a modellről:", expanded=False):
                 st.write(model_descriptions[selected_model_name])
-
         model = load_model(selected_model_name)
-        vectorizer = load_model("vectorizer")  # Load the vectorizer used for KMeans
-
+        vectorizer = load_model("vectorizer")
         if model and vectorizer:
             if 'sentiment_log' not in st.session_state:
                 st.session_state.sentiment_log = []
-
             user_input = st.text_area("Írd be a szöveget a klaszterezéshez!")
             use_multiline = st.checkbox("Többsoros szöveg", value=False)
-
             if st.button("Klaszterezés"):
                 if user_input.strip() == "":
                     st.warning("Kérlek, adj meg egy szöveget.")
@@ -199,7 +192,6 @@ else:
                         cluster = model.predict(input_vectorized)[0]
                         st.success(f"A klaszter: {cluster}")
                         st.session_state.sentiment_log.append((user_input, cluster))
-
                     st.session_state.classification_done = True
             if len(st.session_state.sentiment_log) > 0:
                 cluster_counts = pd.Series([s[1] for s in st.session_state.sentiment_log]).value_counts()
