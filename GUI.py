@@ -6,7 +6,13 @@ from sklearn.metrics import confusion_matrix, classification_report
 import plotly.graph_objects as go
 import os, json
 from sklearn.decomposition import PCA
+import subprocess
+import random
 
+emotion_options = [
+    "neutral", "worry", "happiness", "sadness", "love", "surprise",
+    "fun", "relief", "hate", "empty", "enthusiasm", "boredom", "anger"
+]
 #betolti az adott modelt, ha nem talalja tajekoztat
 def load_model(model_name):
     try:
@@ -84,14 +90,16 @@ if selected_model_name != "KMeans_model":
                     st.write("Ez jelenleg a MultinomialNB modellt tanítja újra.")
                     st.write("Kérjük ne 1-1 szót írjon.")
                     st.write("Az AI nagyon sok külön üzenetet tanult már be. A legújabb információ neki ugyanannyi értékkel bír mint a legrégebbi,avagy ha megad egy érzelmet és egy szöveget közel biztos hogy nem fogja egyből megadni a várt érzelmet.")
-                    st.session_state.sentimentfix_text = st.text_input(
-                        "Add meg az érzelmet:",
-                        value=st.session_state.sentimentfix_text,
+                    st.session_state.sentimentfix_text = st.selectbox(
+                        "Válaszd ki az érzelmet:",
+                        options=emotion_options,
+                        index=emotion_options.index(st.session_state.sentimentfix_text) if st.session_state.sentimentfix_text in emotion_options else 0,
                         key="sentiment_input"
                     )
                     st.session_state.inputfix_text = st.text_area(
                         "Add meg a szöveget:",
-                        value=st.session_state.inputfix_text,
+                        value=user_input,
+
                         key="content_input"
                     )
                     if st.button("Fejlessze az AI-unkat."):
@@ -100,9 +108,8 @@ if selected_model_name != "KMeans_model":
                         else:
                             with st.spinner("Modell betanítása folyamatban... Kérlek, várj."):
                                 try:
-                                    import subprocess
+                                    tweet_id = random.randint(1, 1000000)
                                     csv_file = 'tweet_emotions.csv'
-                                    tweet_id = 47
                                     new_row = {
                                         'tweet_id': tweet_id,
                                         'sentiment': st.session_state.sentimentfix_text,

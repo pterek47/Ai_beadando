@@ -29,7 +29,7 @@ def train_kmeans():
         pickle.dump(model, f)
     with open('vectorizer.pkl', 'wb') as f:
         pickle.dump(vectorizer, f)
-    print("K-Means model saved successfully!")
+    #print("K-Means model saved successfully!")
 def train_multinomial_nb():
     data = pd.read_csv('tweet_emotions.csv')
     texts = data['content'].fillna('')
@@ -39,12 +39,12 @@ def train_multinomial_nb():
     model.fit(X_train, y_train)
     y_pred = model.predict(X_test)
     test_score = model.score(X_test, y_test)
-    print(f'Teszt pontszám: {test_score:.5f}')
+    #print(f'Teszt pontszám: {test_score:.5f}')
     cm = confusion_matrix(y_test, y_pred, labels=model.classes_)
-    print("Konfúziós mátrix:", cm)
+    #print("Konfúziós mátrix:", cm)
     with open('MultinomialNB_model.pkl', 'wb') as f:
         pickle.dump(model, f)
-    print("A Multinomial modell sikeresen mentve!")
+    #print("A Multinomial modell sikeresen mentve!")
 def train_svm():
     data = pd.read_csv('tweet_emotions.csv')
     texts = data['content'].fillna('')
@@ -55,12 +55,12 @@ def train_svm():
     model.fit(X_train, y_train)
     y_pred = model.predict(X_test)
     test_score = model.score(X_test, y_test)
-    print(f'Teszt pontszám: {test_score:.5f}')
+    #print(f'Teszt pontszám: {test_score:.5f}')
     cm = confusion_matrix(y_test, y_pred, labels=model.classes_)
-    print("Konfúziós mátrix:", cm)
+    #print("Konfúziós mátrix:", cm)
     with open('svm_model.pkl', 'wb') as f:
         pickle.dump(model, f)
-    print("Az SVM modell sikeresen mentveasd!")
+    #print("Az SVM modell sikeresen mentveasd!")
 if __name__ == "__main__":
     if not os.path.exists('test_data.pkl'):
         print("A test_data.pkl fájl nem létezik, létrehozom...")
